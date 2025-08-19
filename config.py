@@ -1,5 +1,5 @@
 # Server Configuration
-API_BASE = "ordermanagementsystem-production-dd4b.up.railway.app"
+API_BASE = "https://ordermanagementsystem-production-dd4b.up.railway.app"
 VENDOR_ID = "755562397636928"  # Andhra Ghuma Ghumalu
 
 # UI Configuration
