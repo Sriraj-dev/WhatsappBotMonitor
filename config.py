@@ -43,12 +43,6 @@ CUSTOM_CSS = """
     padding: 3rem 1rem;
 }
 
-.chat-wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 .message-left {
     display: flex;
     justify-content: flex-start;
@@ -98,28 +92,22 @@ CUSTOM_CSS = """
     color: #ACACAC;
 }
 
+.chat-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .chat-container {
+    flex-grow: 1;
     height: calc(100vh - 250px);
+    # height: full;
     overflow-y: auto;
     padding: 20px;
     background-color: #191919;
     border-radius: 10px;
-    margin: 10px 0;
+    # margin: 10px 0;
     # border: 1px solid #333;
 }
-
-# .message-input-box {
-#     position: fixed;
-#     bottom: 20px;
-#     left: 50%;
-#     transform: translateX(-50%);
-#     width: calc(100% - 400px);
-#     max-width: 860px;
-#     background-color: #191919;
-#     padding: 15px;
-#     border: 1px solid #333;
-#     border-radius: 10px;
-#     z-index: 1000;
-# }
 </style>
 """

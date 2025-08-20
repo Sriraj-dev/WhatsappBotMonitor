@@ -1,5 +1,8 @@
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 from streamlit.components.v1 import html as st_html
+import streamlit.components.v1 as components
+import random
 
 import time
 import html
@@ -34,11 +37,20 @@ def main():
     
     # Sidebar - User List
     with st.sidebar:
-        st.header("🔥 Active Conversations")
-        
         # Controls
-        if st.button("🔄 Refresh", use_container_width=True):
-            st.rerun()
+        col1, col2 = st.columns([1, 1])
+
+        with col1:
+            if st.button("🔄 Refresh", use_container_width=True):
+                st.rerun()
+        with col2:
+            # Auto-refresh toggle
+            auto_refresh = st.toggle("⏱ Auto (10s)", key="auto_refresh")
+
+        st.header("🔥 Active Conversations")
+
+        if auto_refresh:
+            st_autorefresh(interval=10 * 1000, key="refresh")
         
         # Fetch users
         users = get_active_users()
@@ -71,7 +83,9 @@ def main():
         user_id = user['userId']
         user_name = get_display_name(user['userName'], user_id)
         
-        st.markdown(f"#### 💬 {user_name} ({user_id})")
+        chatScreen_html = '<div class="chat-screen" id="chat-screen">'
+        # st.markdown(f"#### 💬 {user_name} ({user_id})")
+        chatScreen_html += f'<h3>💬 {user_name} ({user_id})</h3>'
         
         # Messages Container
         messages = get_messages(user_id)
@@ -88,21 +102,23 @@ def main():
                     messages_html += f'<div class="message-left"><div class="user-message"><div class="message-sender">{html.escape(user_name)}</div><div>{escaped_message}</div><div class="message-timestamp">{timestamp}</div></div></div>'
                 else:
                     messages_html += f'<div class="message-right"><div class="bot-message"><div class="message-sender">You (Bot)</div><div>{escaped_message}</div><div class="message-timestamp">{timestamp}</div></div></div>'
+            messages_html += '<div id="end-of-chat"></div>'
+        messages_html += f"""
+        <div id="scroll-to-me" style='background: cyan; height=1px;'></div>
+        <script id="{random.randint(1000, 9999)}">
+            var e = document.getElementById("scroll-to-me");
+            if (e) {{
+                e.scrollIntoView({{behavior: "smooth"}});
+                e.remove();
+            }}
+        </script>
+        """
+        # st.markdown(messages_html, unsafe_allow_html=True)
+        chatScreen_html += messages_html
+        chatScreen_html += '</div>'
+        st.markdown(chatScreen_html, unsafe_allow_html=True)
+        # components.html(chatScreen_html)
 
-        messages_html += '</div>'
-        st.markdown(messages_html, unsafe_allow_html=True)
-        st.markdown(
-            """
-            <script>
-            const chatContainer = document.getElementById('chat-container');
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            </script>
-            """,
-            unsafe_allow_html=True
-        )
-        
 
         # Message Input
         form_key = f"send_message_form_{user_id}"
@@ -129,6 +145,7 @@ def main():
                     st.rerun()
                 else:
                     st.error("❌ Failed to send")
+        
     
     else:
         # Welcome screen
