@@ -83,9 +83,9 @@ def main():
         user_id = user['userId']
         user_name = get_display_name(user['userName'], user_id)
         
-        chatScreen_html = '<div class="chat-screen" id="chat-screen">'
-        # st.markdown(f"#### 💬 {user_name} ({user_id})")
-        chatScreen_html += f'<h3>💬 {user_name} ({user_id})</h3>'
+        st.markdown(f"#### 💬 {user_name} ({user_id})")
+        # chatScreen_html = '<div class="chat-screen" id="chat-screen">'
+        # chatScreen_html += f'<h3>💬 {user_name} ({user_id})</h3>'
         
         # Messages Container
         messages = get_messages(user_id)
@@ -103,20 +103,12 @@ def main():
                 else:
                     messages_html += f'<div class="message-right"><div class="bot-message"><div class="message-sender">You (Bot)</div><div>{escaped_message}</div><div class="message-timestamp">{timestamp}</div></div></div>'
             messages_html += '<div id="end-of-chat"></div>'
-        messages_html += f"""
-        <div id="scroll-to-me" style='background: cyan; height=1px;'></div>
-        <script id="{random.randint(1000, 9999)}">
-            var e = document.getElementById("scroll-to-me");
-            if (e) {{
-                e.scrollIntoView({{behavior: "smooth"}});
-                e.remove();
-            }}
-        </script>
-        """
+
         # st.markdown(messages_html, unsafe_allow_html=True)
-        chatScreen_html += messages_html
-        chatScreen_html += '</div>'
-        st.markdown(chatScreen_html, unsafe_allow_html=True)
+        messages_html += '</div>'
+        # chatScreen_html += messages_html
+        # chatScreen_html += '</div>'
+        st.markdown(messages_html, unsafe_allow_html=True)
         # components.html(chatScreen_html)
 
 
