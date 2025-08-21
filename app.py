@@ -48,12 +48,25 @@ def main():
             auto_refresh = st.toggle("⏱ Auto (10s)", key="auto_refresh")
 
         st.header("🔥 Active Conversations")
+        
+        # Search bar
+        search_query = st.text_input("🔍 Search contacts", placeholder="Search by name or phone...", label_visibility="collapsed")
 
         if auto_refresh:
             st_autorefresh(interval=10 * 1000, key="refresh")
         
         # Fetch users
         users = get_active_users()
+        
+        # Filter users based on search
+        if search_query:
+            filtered_users = []
+            for user in users:
+                user_name = get_display_name(user['userName'], user['userId']).lower()
+                user_phone = user['userId'][2:]
+                if search_query.lower() in user_name or search_query in user_phone:
+                    filtered_users.append(user)
+            users = filtered_users
         
         if users:
             st.write(f"**{len(users)} active users**")
